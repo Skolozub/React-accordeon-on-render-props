@@ -12,8 +12,10 @@ const accordionItems = [
   ["Четвёртый элемент", <LoremIpsum p={3} />]
 ];
 
+const logger = data => console.log(data);
+
 const App = () => (
-  <AccordionContainer activeItems={[0, 3]} multiply>
+  <AccordionContainer activeItems={[0, 3]} onToggle={logger} multiply>
     {props => (
       <Accordion>
         {accordionItems.map(([title, content], index) => (

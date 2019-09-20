@@ -7,7 +7,7 @@ export class AccordionContainer extends Component {
   };
 
   componentDidMount = () => {
-    const { multiply = false, activeItems = [] } = this.props;
+    const { activeItems = [], multiply = false } = this.props;
     this.setState({ multiply, activeItems });
   };
 
@@ -21,8 +21,10 @@ export class AccordionContainer extends Component {
 
       return { activeItems: [...activeItems, itemNum] };
     };
-
     this.setState(toggler);
+
+    const { onToggle } = this.props;
+    if (onToggle) onToggle(itemNum);
   };
 
   render = () => {

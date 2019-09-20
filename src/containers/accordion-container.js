@@ -12,7 +12,8 @@ export class AccordionContainer extends Component {
   };
 
   toggleActiveItem = itemNum => {
-    const toggler = ({ activeItems, multiply }) => {
+    // todo: refactoring this function
+    const toggleItem = ({ activeItems, multiply }) => {
       const isItemExist = activeItems.includes(itemNum);
       if (isItemExist)
         return { activeItems: activeItems.filter(item => item !== itemNum) };
@@ -21,10 +22,14 @@ export class AccordionContainer extends Component {
 
       return { activeItems: [...activeItems, itemNum] };
     };
-    this.setState(toggler);
+    this.setState(toggleItem);
 
-    const { onToggle } = this.props;
+    const { activeItems } = this.state;
+    const { onToggle, onOpen, onClose } = this.props;
+    const isItemExist = activeItems.includes(itemNum);
     if (onToggle) onToggle(itemNum);
+    if (!isItemExist && onOpen) onOpen(itemNum);
+    if (isItemExist && onClose) onClose(itemNum);
   };
 
   render = () => {

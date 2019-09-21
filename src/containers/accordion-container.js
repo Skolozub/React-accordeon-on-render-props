@@ -1,18 +1,43 @@
 import { Component } from "react";
+import { decodeGetParams } from "../functions";
 
 export class AccordionContainer extends Component {
   state = {
     activeItems: [],
+    params: {},
     multiply: false
   };
 
+  setParams = search => {
+    const params = decodeGetParams(search);
+
+    this.setState(({ params: prevParams }) => ({
+      params: { ...prevParams, ...params }
+    }));
+  };
+
   componentDidMount = () => {
-    const { activeItems = [], multiply = false } = this.props;
-    this.setState({ multiply, activeItems });
+    const {
+      activeItems = [],
+      multiply = false,
+      location,
+      withparams
+    } = this.props;
+
+    this.setState({ activeItems, multiply });
+    if (withparams) this.setParams(location.search);
+  };
+
+  componentDidUpdate = prevProps => {
+    const { location, withparams } = this.props;
+
+    if (!withparams) return null;
+
+    const paramsHasChanged = prevProps.location.search !== location.search;
+    if (paramsHasChanged) this.setParams(location.search);
   };
 
   toggleActiveItem = itemNum => {
-    // todo: refactoring this function
     const toggleItem = ({ activeItems, multiply }) => {
       const isItemExist = activeItems.includes(itemNum);
       if (isItemExist)
@@ -23,19 +48,18 @@ export class AccordionContainer extends Component {
       return { activeItems: [...activeItems, itemNum] };
     };
     this.setState(toggleItem);
-
-    const { activeItems } = this.state;
-    const { onToggle, onOpen, onClose } = this.props;
-    const isItemExist = activeItems.includes(itemNum);
-    if (onToggle) onToggle(itemNum);
-    if (!isItemExist && onOpen) onOpen(itemNum);
-    if (isItemExist && onClose) onClose(itemNum);
   };
 
   render = () => {
-    const { activeItems, multiply } = this.state;
+    const { activeItems, params, multiply, withparams } = this.state;
     const { children } = this.props;
 
-    return children({ activeItems, multiply, toggle: this.toggleActiveItem });
+    return children({
+      activeItems,
+      params,
+      multiply,
+      withparams,
+      toggle: this.toggleActiveItem
+    });
   };
 }

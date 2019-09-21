@@ -1,45 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { LoremIpsum } from "react-lorem-ipsum";
+import { Router, Switch, Route } from "react-router";
+import { createBrowserHistory } from "history";
+import axios from "axios";
+import { App } from "./app";
 
-import { AccordionContainer } from "./containers/accordion-container";
-import { Accordion } from "./components/accordion";
+axios.defaults.baseURL = "https://swapi.co/api";
+export const history = createBrowserHistory();
 
-const accordionItems = [
-  ["Первый элемент", <LoremIpsum p={3} />],
-  ["Второй элемент", <LoremIpsum p={3} />],
-  ["Третий элемент", <LoremIpsum p={3} />],
-  ["Четвёртый элемент", <LoremIpsum p={3} />]
-];
-
-const handleToggle = data => console.log(`toggle ${data}`);
-const handleOpen = data => console.log(`open ${data}`);
-const handleClose = data => console.log(`close ${data}`);
-
-const App = () => (
-  <AccordionContainer
-    activeItems={[0, 3]}
-    onOpen={handleOpen}
-    onClose={handleClose}
-    onToggle={handleToggle}
-    multiply
-  >
-    {props => (
-      <Accordion>
-        {accordionItems.map(([title, content], index) => (
-          <Accordion.Item key={index}>
-            <Accordion.Title {...props} itemKey={index}>
-              {title}
-            </Accordion.Title>
-            <Accordion.Content {...props} itemKey={index}>
-              {content}
-            </Accordion.Content>
-          </Accordion.Item>
-        ))}
-      </Accordion>
-    )}
-  </AccordionContainer>
+const Index = () => (
+  <Router history={history}>
+    <Switch>
+      <Route path="/" component={App} />
+    </Switch>
+  </Router>
 );
 
 const rootElement = document.getElementById("root");
-ReactDOM.render(<App />, rootElement);
+ReactDOM.render(<Index />, rootElement);
